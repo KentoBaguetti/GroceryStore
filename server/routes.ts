@@ -1,9 +1,11 @@
 import express, { Express, Request, Response } from "express";
 import axios from "axios";
-import { addProduct, getProductById } from "./database/dbFunctions";
-import { Product } from "./database/models/product";
+import { getProductById } from "./database/productFunctions";
+import connectToDB from "./database/database";
 
 const router = express.Router();
+
+connectToDB();
 
 router.get("/", (req, res) => {
   res.json({

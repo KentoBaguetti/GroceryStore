@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const uri = "mongodb://localhost:27018/Database";
+const uri = "mongodb://localhost:27017/Database";
 
 async function connectToDB(): Promise<void> {
   try {

@@ -8,19 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
-class User {
-    constructor(username, password, salt, email) {
-        this.username = username;
-        this.password = password;
-        this.salt = salt;
-        this.email = email;
-        this.dateAndTimeUserCreated = new Date();
-    }
-    setLogInDate() {
-        this.dateAndTimeLastLoggedIn = new Date();
-    }
-}
-exports.User = User;
-const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
+const mongoose_1 = __importDefault(require("mongoose"));
+const uri = "mongodb://localhost:27017/Database";
+const createAdditionalConnection = () => __awaiter(void 0, void 0, void 0, function* () {
+    const connection = mongoose_1.default.createConnection(uri);
+    connection.on("connected", () => {
+        console.log("Connected to the Database (additional connection)");
+    });
+    connection.on("error", (error) => {
+        console.error(`Error connecting to the database: ${error.message}`);
+    });
+    return connection;
+});
+exports.default = createAdditionalConnection;
