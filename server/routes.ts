@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import axios from "axios";
 import { addProduct, getProductById } from "./database/dbFunctions";
-import { Product } from "./database/models/tempProducts";
+import { Product } from "./database/models/product";
 
 const router = express.Router();
 

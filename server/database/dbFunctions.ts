@@ -1,5 +1,3 @@
-import { Database, ingredientsList } from "./jsonDatabase";
-import { Product, Ingredient } from "./models/tempProducts";
 import { Request, Response } from "express";
 
 const getProductsLength = (): number => {
