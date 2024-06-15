@@ -7,18 +7,18 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
   res.json({
-    message: "/ Active",
+    message: "'/' Active",
   });
 });
 
 router.get("/product/:id", (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
+  const { product, error }: { product: Product | null; error: string | null } =
+    getProductById(id);
 
-  if (isNaN(id)) {
-    return res.status(400).send("Invalid product ID.");
+  if (error) {
+    return res.status(400).send(error);
   }
-
-  const product: Product = getProductById(id);
 
   if (!product) {
     return res.status(404).send("Product not found");

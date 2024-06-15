@@ -1,18 +1,11 @@
 import { Database, ingredientsList } from "./jsonDatabase";
 import { Product, Ingredient } from "./tempProducts";
+import { Request, Response } from "express";
 
 const getProductsLength = (): number => {
   return Object.keys(Database.products).length;
 };
 
-/**
- *
- * @param name
- * @param price
- * @param description
- * @param ingredients
- * @returns void
- */
 const addProduct = (
   name: string,
   price: number,
@@ -30,8 +23,26 @@ const addProduct = (
   Database.products[id] = product;
 };
 
-const getProductById = (id: number): Product => {
-  return Database.products[id];
+const getProductById = (
+  id: number
+): { product: Product | null; error: string | null } => {
+  if (isNaN(id) || id < 1 || id > getProductsLength()) {
+    return { product: null, error: "Invalid product ID" };
+  }
+
+  const product: Product = Database.products[id];
+
+  if (!product) {
+    return {
+      product: null,
+      error: "Product not found",
+    };
+  }
+
+  return {
+    product,
+    error: null,
+  };
 };
 
 export { addProduct, getProductById };

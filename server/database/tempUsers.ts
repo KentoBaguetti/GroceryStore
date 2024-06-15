@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { Request, Response } from "express";
 
 interface User {
   username: string;
@@ -31,6 +32,6 @@ class User implements User {
   }
 }
 
-const registerUser = (req: Request, res: Response): void => {};
+const registerUser = async (req: Request, res: Response): Promise<void> => {};
 
 export { User };
