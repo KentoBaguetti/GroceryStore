@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Database = void 0;
+exports.ingredientsList = exports.Database = void 0;
 const tempProducts_1 = require("./tempProducts");
 const ingredientsList = [
     new tempProducts_1.Ingredient("Flour", 1, "kg"),
@@ -19,6 +19,7 @@ const ingredientsList = [
     new tempProducts_1.Ingredient("Olives", 0.1, "kg"),
     new tempProducts_1.Ingredient("Onions", 0.2, "kg"),
 ];
+exports.ingredientsList = ingredientsList;
 // Create some sample products
 const productsList = [
     new tempProducts_1.Product(1, "Chocolate Cake", 15.99, "Delicious chocolate cake", [
@@ -138,9 +139,9 @@ const productsList = [
 ];
 const Database = {
     products: {},
+    users: {},
 };
 exports.Database = Database;
 productsList.forEach((product) => {
     Database.products[product.getID()] = product;
 });
-console.log(Database);

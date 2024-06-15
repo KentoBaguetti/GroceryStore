@@ -1,4 +1,5 @@
 import { Product, Ingredient } from "./tempProducts";
+import { User } from "./tempUsers";
 
 const ingredientsList = [
   new Ingredient("Flour", 1, "kg"),
@@ -140,16 +141,18 @@ interface DB {
   products: {
     [key: number]: Product;
   };
+  users: {
+    [key: number]: User;
+  };
 }
 
 const Database: DB = {
   products: {},
+  users: {},
 };
 
 productsList.forEach((product) => {
   Database.products[product.getID()] = product;
 });
 
-console.log(Database);
-
-export { Database };
+export { Database, ingredientsList };
