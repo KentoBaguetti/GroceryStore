@@ -1,5 +1,5 @@
 import { Database, ingredientsList } from "./jsonDatabase";
-import { Product, Ingredient } from "./tempProducts";
+import { Product, Ingredient } from "./models/tempProducts";
 import { Request, Response } from "express";
 
 const getProductsLength = (): number => {
@@ -23,26 +23,15 @@ const addProduct = (
   Database.products[id] = product;
 };
 
-const getProductById = (
-  id: number
-): { product: Product | null; error: string | null } => {
-  if (isNaN(id) || id < 1 || id > getProductsLength()) {
-    return { product: null, error: "Invalid product ID" };
+const getProductById = async (req: Request, res: Response): Promise<void> => {
+  const id: number = parseInt(req.params.id);
+  if (isNaN(id) || id < 0 || id > getProductsLength()) {
+    res.status(400).send("Invalid product ID");
   }
 
   const product: Product = Database.products[id];
 
-  if (!product) {
-    return {
-      product: null,
-      error: "Product not found",
-    };
-  }
-
-  return {
-    product,
-    error: null,
-  };
+  res.status(200).json(product);
 };
 
 export { addProduct, getProductById };

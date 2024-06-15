@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ingredientsList = exports.Database = void 0;
-const tempProducts_1 = require("./tempProducts");
+const tempProducts_1 = require("./models/tempProducts");
 const ingredientsList = [
     new tempProducts_1.Ingredient("Flour", 1, "kg"),
     new tempProducts_1.Ingredient("Sugar", 0.5, "kg"),

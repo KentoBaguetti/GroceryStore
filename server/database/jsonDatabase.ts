@@ -1,5 +1,5 @@
-import { Product, Ingredient } from "./tempProducts";
-import { User } from "./tempUsers";
+import { Product, Ingredient } from "./models/tempProducts";
+import { User } from "./models/tempUsers";
 
 const ingredientsList = [
   new Ingredient("Flour", 1, "kg"),
