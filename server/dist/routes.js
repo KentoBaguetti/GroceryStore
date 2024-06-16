@@ -14,5 +14,6 @@ router.get("/", (req, res) => {
     });
 });
 router.get("/product/:id", productFunctions_1.getProductById);
+router.get("/product/category/:category", productFunctions_1.getProductsByCategory);
 router.post("/product/add", productFunctions_1.addProduct);
 exports.default = router;

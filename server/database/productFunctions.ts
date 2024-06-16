@@ -56,6 +56,33 @@ const getProductById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getProductsByCategory = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const category: string = req.params.category;
+  try {
+    if (!category || !categorySet.has(category)) {
+      res.status(400).json({ error: "Enter a valid category" });
+      return;
+    }
+
+    const products: IProduct[] | null = await Product.find({ category });
+
+    if (!products) {
+      res.status(404).json({
+        error: `Could not find any products in the category "${category}"`,
+      });
+    }
+
+    res
+      .status(200)
+      .json({ products, message: "Successfully fetched products" });
+  } catch (error: any) {
+    console.log(`Error fetching products by category: ${error.message}`);
+  }
+};
+
 /**
  *
  * req.body template: {
@@ -139,4 +166,4 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { getProductById, addProduct };
+export { getProductById, getProductsByCategory, addProduct };

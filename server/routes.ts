@@ -1,6 +1,10 @@
 import express, { Express, Request, Response } from "express";
 import axios from "axios";
-import { getProductById, addProduct } from "./database/productFunctions";
+import {
+  getProductById,
+  getProductsByCategory,
+  addProduct,
+} from "./database/productFunctions";
 import connectToDB from "./database/database";
 
 const router = express.Router();
@@ -14,6 +18,8 @@ router.get("/", (req, res) => {
 });
 
 router.get("/product/:id", getProductById);
+
+router.get("/product/category/:category", getProductsByCategory);
 
 router.post("/product/add", addProduct);
 

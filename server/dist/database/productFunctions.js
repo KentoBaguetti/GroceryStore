@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addProduct = exports.getProductById = void 0;
+exports.addProduct = exports.getProductsByCategory = exports.getProductById = void 0;
 const productModel_1 = __importDefault(require("./models/productModel"));
 // This set will hold each valid "category" of item. When a new product is added, if the given category is not in the set, dont add it and send an error
 const categorySet = new Set();
@@ -65,6 +65,28 @@ const getProductById = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getProductById = getProductById;
+const getProductsByCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const category = req.params.category;
+    try {
+        if (!category || !categorySet.has(category)) {
+            res.status(400).json({ error: "Enter a valid category" });
+            return;
+        }
+        const products = yield productModel_1.default.find({ category });
+        if (!products) {
+            res.status(404).json({
+                error: `Could not find any products in the category "${category}"`,
+            });
+        }
+        res
+            .status(200)
+            .json({ products, message: "Successfully fetched products" });
+    }
+    catch (error) {
+        console.log(`Error fetching products by category: ${error.message}`);
+    }
+});
+exports.getProductsByCategory = getProductsByCategory;
 /**
  *
  * req.body template: {
