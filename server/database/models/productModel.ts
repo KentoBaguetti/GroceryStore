@@ -4,12 +4,12 @@ interface IProduct extends Document {
   id: number;
   name: String;
   price: Number;
-  description: String;
+  description?: String;
   ingredients: String[];
   getId(): number;
   getName(): String;
   getPrice(): Number;
-  getDescription(): String;
+  getDescription(): String | undefined;
   getIngredients(): String[];
   setPrice(newPrice: Number): void;
 }

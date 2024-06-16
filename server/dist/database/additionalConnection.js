@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const uri = "mongodb://localhost:27017/Database";
+const uri = "mongodb://localhost:27017/GroceryStoreDatabase";
 const createAdditionalConnection = () => __awaiter(void 0, void 0, void 0, function* () {
     const connection = mongoose_1.default.createConnection(uri);
     connection.on("connected", () => {

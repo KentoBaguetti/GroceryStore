@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import axios from "axios";
-import { getProductById } from "./database/productFunctions";
+import { getProductById, addProduct } from "./database/productFunctions";
 import connectToDB from "./database/database";
 
 const router = express.Router();
@@ -14,5 +14,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/product/:id", getProductById);
+
+router.post("/product/add", addProduct);
 
 export default router;

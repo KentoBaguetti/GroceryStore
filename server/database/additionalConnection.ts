@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const uri = "mongodb://localhost:27017/Database";
+const uri = "mongodb://localhost:27017/GroceryStoreDatabase";
 
 const createAdditionalConnection = async (): Promise<mongoose.Connection> => {
   const connection = mongoose.createConnection(uri);
