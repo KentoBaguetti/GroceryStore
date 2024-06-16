@@ -2,127 +2,142 @@ import mongoose from "mongoose";
 import Product, { IProduct } from "../database/models/productModel";
 import createAdditionalConnection from "../database/additionalConnection";
 
-const productsData: any[] = [
+const products: any = [
   {
     id: 1,
-    name: "Apple",
-    price: 1.2,
-    description: "Fresh red apple",
-    ingredients: [],
+    name: "Organic Fuji Apples",
+    category: "Fruits",
+    price: 2.99,
+    description: "Sweet and crisp organic Fuji apples",
+    ingredients: ["Apples"],
   },
   {
     id: 2,
-    name: "Banana",
-    price: 0.5,
-    description: "Organic bananas",
-    ingredients: [],
+    name: "Gummy Bears",
+    category: "Candy",
+    price: 1.99,
+    description: "Colorful and chewy gummy bears",
+    ingredients: ["Sugar", "Gelatin", "Corn syrup"],
   },
   {
     id: 3,
-    name: "Milk",
-    price: 1.5,
-    description: "1 gallon of whole milk",
-    ingredients: ["Milk"],
+    name: "Greek Yogurt",
+    category: "Dairy",
+    price: 3.49,
+    description: "Thick and creamy Greek yogurt",
+    ingredients: ["Milk", "Yogurt cultures"],
   },
   {
     id: 4,
-    name: "Bread",
-    price: 2.0,
-    description: "Whole grain bread",
-    ingredients: ["Wheat flour", "Water", "Yeast", "Salt"],
+    name: "Pineapple Slices",
+    category: "Fruits",
+    price: 3.79,
+    description: "Juicy pineapple slices in natural juice",
+    ingredients: ["Pineapple", "Pineapple juice"],
   },
   {
     id: 5,
-    name: "Eggs",
-    price: 2.5,
-    description: "Dozen large eggs",
-    ingredients: ["Eggs"],
+    name: "Dark Chocolate Bar",
+    category: "Candy",
+    price: 3.79,
+    description: "Rich and indulgent dark chocolate bar",
+    ingredients: ["Cocoa beans", "Sugar", "Cocoa butter"],
   },
   {
     id: 6,
-    name: "Chicken Breast",
-    price: 5.0,
-    description: "Boneless, skinless chicken breast",
-    ingredients: ["Chicken"],
+    name: "Blueberry Muffins",
+    category: "Bakery",
+    price: 2.49,
+    description: "Moist blueberry muffins made fresh daily",
+    ingredients: ["Flour", "Blueberries", "Sugar", "Butter"],
   },
   {
     id: 7,
-    name: "Butter",
-    price: 3.0,
-    description: "Unsalted butter",
-    ingredients: ["Cream"],
-  },
-  {
-    id: 8,
-    name: "Cheese",
-    price: 4.0,
-    description: "Cheddar cheese",
+    name: "Parmesan Cheese",
+    category: "Dairy",
+    price: 5.99,
+    description: "Aged Parmesan cheese, perfect for grating",
     ingredients: ["Milk", "Salt", "Enzymes"],
   },
   {
+    id: 8,
+    name: "Salmon Fillet",
+    category: "Seafood",
+    price: 9.99,
+    description: "Fresh Atlantic salmon fillet, boneless and skinless",
+    ingredients: ["Salmon"],
+  },
+  {
     id: 9,
-    name: "Carrots",
-    price: 1.0,
-    description: "Fresh carrots",
-    ingredients: [],
+    name: "Granola Bars",
+    category: "Snacks",
+    price: 4.49,
+    description: "Nutritious granola bars with oats and honey",
+    ingredients: ["Oats", "Honey", "Nuts", "Seeds"],
   },
   {
     id: 10,
-    name: "Tomatoes",
-    price: 1.5,
-    description: "Organic tomatoes",
-    ingredients: [],
+    name: "Green Tea",
+    category: "Beverages",
+    price: 3.29,
+    description: "Premium green tea leaves, loose leaf",
+    ingredients: ["Green tea leaves"],
   },
   {
     id: 11,
-    name: "Orange Juice",
-    price: 3.5,
-    description: "100% pure orange juice",
-    ingredients: ["Orange juice"],
+    name: "Whole Wheat Bread",
+    category: "Bakery",
+    price: 3.99,
+    description: "Healthy whole wheat bread, freshly baked",
+    ingredients: ["Whole wheat flour", "Water", "Yeast"],
   },
   {
     id: 12,
-    name: "Yogurt",
-    price: 1.0,
-    description: "Strawberry flavored yogurt",
-    ingredients: ["Milk", "Strawberries", "Sugar", "Live cultures"],
+    name: "Mixed Nuts",
+    category: "Snacks",
+    price: 6.99,
+    description: "Assorted mixed nuts with almonds, cashews, and peanuts",
+    ingredients: ["Almonds", "Cashews", "Peanuts"],
   },
   {
     id: 13,
-    name: "Rice",
-    price: 2.0,
-    description: "Long grain white rice",
-    ingredients: ["Rice"],
+    name: "Vanilla Ice Cream",
+    category: "Dairy",
+    price: 4.99,
+    description: "Creamy vanilla ice cream made with real vanilla beans",
+    ingredients: ["Milk", "Cream", "Sugar", "Vanilla beans"],
   },
   {
     id: 14,
-    name: "Pasta",
-    price: 1.5,
-    description: "Spaghetti pasta",
-    ingredients: ["Durum wheat semolina", "Water"],
+    name: "Cheddar Cheese",
+    category: "Dairy",
+    price: 4.49,
+    description: "Sharp cheddar cheese, perfect for slicing",
+    ingredients: ["Milk", "Salt", "Enzymes"],
   },
   {
     id: 15,
-    name: "Olive Oil",
-    price: 6.0,
-    description: "Extra virgin olive oil",
-    ingredients: ["Olive oil"],
+    name: "Pasta Sauce",
+    category: "Pantry",
+    price: 2.79,
+    description: "Classic tomato pasta sauce with herbs and spices",
+    ingredients: ["Tomatoes", "Garlic", "Onions", "Herbs"],
   },
 ];
-const populateProducts = async () => {
+
+// Function to save products to MongoDB using Mongoose
+async function saveProductsToDatabase() {
   try {
-    const connection = await createAdditionalConnection();
+    // Clear existing products
+    await Product.deleteMany({});
 
-    for (const productData of productsData) {
-      const product = new Product(productData);
-      await product.save();
-      console.log(`Saved product: ${product.name}`);
-    }
-    await mongoose.disconnect();
-    console.log("Database connection closed");
+    // Insert new products
+    const insertedProducts = await Product.insertMany(products);
+    console.log(`${insertedProducts.length} products inserted successfully.`);
   } catch (error) {
-    console.error("Error populating products:", error);
+    console.error("Error saving products:", error);
   }
-};
+}
 
-populateProducts();
+// Uncomment and call the function to save products to the database
+// saveProductsToDatabase();
