@@ -1,6 +1,23 @@
 import Product, { IProduct } from "./models/productModel";
 import { Request, Response } from "express";
 
+// This set will hold each valid "category" of item. When a new product is added, if the given category is not in the set, dont add it and send an error
+const categorySet = new Set<string>();
+const categoryArr = [
+  "Fruits",
+  "Candy",
+  "Dairy",
+  "Bakery",
+  "SeaFood",
+  "Snacks",
+  "Beverages",
+  "Pantry",
+];
+
+for (let i = 0; i < categoryArr.length; i++) {
+  categorySet.add(categoryArr[i]);
+}
+
 /**
  *
  * @returns the number of products in the Product collection
@@ -43,6 +60,7 @@ const getProductById = async (req: Request, res: Response): Promise<void> => {
  *
  * req.body template: {
  *  "name" : "Calipico",
+ *  "category": "Beverages"
  *  "price" : 2.99,
  *  "description" : "Japanese Soda",
  *  "ingredients": ["Water", "Japanese power"]
@@ -54,11 +72,13 @@ const getProductById = async (req: Request, res: Response): Promise<void> => {
 const addProduct = async (req: Request, res: Response): Promise<void> => {
   const {
     name,
+    category,
     price,
     description,
     ingredients,
   }: {
     name: string;
+    category: string;
     price: number;
     description: string;
     ingredients: string[];
@@ -68,6 +88,7 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
     // Validate the request body
     if (
       !name ||
+      !category ||
       !price ||
       !description ||
       !ingredients ||
@@ -81,6 +102,14 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
 
     if (typeof price !== "number" || price < 0) {
       res.status(400).json({ error: "Price must be a postive number" });
+      return;
+    }
+
+    if (!categorySet.has(category)) {
+      res
+        .status(400)
+        .json({ error: "Please give a valid category for the product" });
+      return;
     }
 
     const id = (await numberOfProducts()) + 1;
@@ -88,6 +117,7 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
     const newProduct = new Product({
       id,
       name,
+      category,
       price,
       description,
       ingredients,

@@ -27,6 +27,7 @@ const mongoose_1 = __importStar(require("mongoose"));
 const productSchema = new mongoose_1.Schema({
     id: { type: Number, required: true, unique: true },
     name: { type: String, required: true },
+    category: { type: String },
     price: { type: Number, required: true },
     description: { type: String, required: false },
     ingredients: { type: [String], required: true },
@@ -36,6 +37,9 @@ productSchema.methods.getId = function () {
 };
 productSchema.methods.getName = function () {
     return this.name;
+};
+productSchema.methods.getCategory = function () {
+    return this.category;
 };
 productSchema.methods.getPrice = function () {
     return this.price;

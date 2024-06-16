@@ -14,6 +14,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addProduct = exports.getProductById = void 0;
 const productModel_1 = __importDefault(require("./models/productModel"));
+// This set will hold each valid "category" of item. When a new product is added, if the given category is not in the set, dont add it and send an error
+const categorySet = new Set();
+const categoryArr = [
+    "Fruits",
+    "Candy",
+    "Dairy",
+    "Bakery",
+    "SeaFood",
+    "Snacks",
+    "Beverages",
+    "Pantry",
+];
+for (let i = 0; i < categoryArr.length; i++) {
+    categorySet.add(categoryArr[i]);
+}
 /**
  *
  * @returns the number of products in the Product collection
@@ -54,6 +69,7 @@ exports.getProductById = getProductById;
  *
  * req.body template: {
  *  "name" : "Calipico",
+ *  "category": "Beverages"
  *  "price" : 2.99,
  *  "description" : "Japanese Soda",
  *  "ingredients": ["Water", "Japanese power"]
@@ -63,10 +79,11 @@ exports.getProductById = getProductById;
  * @param res
  */
 const addProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, price, description, ingredients, } = req.body;
+    const { name, category, price, description, ingredients, } = req.body;
     try {
         // Validate the request body
         if (!name ||
+            !category ||
             !price ||
             !description ||
             !ingredients ||
@@ -78,11 +95,19 @@ const addProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
         if (typeof price !== "number" || price < 0) {
             res.status(400).json({ error: "Price must be a postive number" });
+            return;
+        }
+        if (!categorySet.has(category)) {
+            res
+                .status(400)
+                .json({ error: "Please give a valid category for the product" });
+            return;
         }
         const id = (yield numberOfProducts()) + 1;
         const newProduct = new productModel_1.default({
             id,
             name,
+            category,
             price,
             description,
             ingredients,
