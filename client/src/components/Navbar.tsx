@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
 import logo from "../assets/companyLogo.jpg";
 
-// Navbar Components
+// Navbar Component KUSHAGRA BHARTI
 
 const Navbar = () => {
   return (
