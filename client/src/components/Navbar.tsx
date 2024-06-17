@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
 import logo from "../assets/companyLogo.jpg";
 
+// Navbar Component
+
 const Navbar = () => {
   return (
     <div className="navbar">
