@@ -1,19 +1,25 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
+import logo from "../assets/companyLogo.jpg";
 
 const Navbar = () => {
   return (
     <div className="navbar">
-      <div className="navbar-logo">
-        <img src="/path/to/logo.png" alt="Company Logo" />
-      </div>
+      <Link to="/">
+        <div className="navbar-logo">
+          <img className="navbar-img" src={logo} alt="Company Logo" />
+        </div>
+      </Link>
 
-      <div className="navbar-location">
-        <span>Delivery Location:</span>
-        <input type="text" placeholder="Enter your location" />
-      </div>
+      <Link to="/location">
+        <div className="navbar-location">
+          <span>Delivery Location:</span>
+          <input type="text" placeholder="Enter your location" />
+        </div>
+      </Link>
 
-      <form className="search-bar" action="">
+      <form className="navbar-search-bar" action="">
         <input type="text" placeholder="Search..." />
         <button type="submit">Search</button>
       </form>
@@ -22,17 +28,28 @@ const Navbar = () => {
         <div className="account-dropdown">
           <button className="account-btn">My Account</button>
           <div className="dropdown-content">
-            <a href="/profile">Profile</a>
-            <a href="/orders">Orders</a>
-            <a href="/logout">Logout</a>
+            <Link to="/profile">
+              <a href="/profile">Profile</a>
+            </Link>
+
+            <Link to="/orders">
+              <a href="/orders">Orders</a>
+            </Link>
+            <Link to="/logout">
+              <a href="/logout">Logout</a>
+            </Link>
           </div>
         </div>
       </div>
 
-      <button className="nav-signin">Sign in</button>
-      <h2 className="nav-cart">
-        <img src="/path/to/logo.png" alt="Company Logo" />
-      </h2>
+      <Link to="/signin">
+        <h2 className="navbar-signin">Sign in</h2>
+      </Link>
+      <Link to="/cart">
+        <h2 className="navbar-cart">
+          <img className="navbar-img" src={logo} alt="Company Logo" />
+        </h2>
+      </Link>
     </div>
   );
 };

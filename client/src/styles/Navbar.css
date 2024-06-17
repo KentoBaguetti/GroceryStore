@@ -1,0 +1,32 @@
+.navbar {
+  display: flex;
+  flex-direction: row;
+}
+
+.navbar-logo {
+  padding: 5px;
+}
+
+.navbar-img {
+  max-width: 30px;
+}
+
+.navbar-location {
+  padding: 5px;
+}
+
+.navbar-search-bar {
+  padding: 5px;
+}
+
+.navbar-account {
+  padding: 5px;
+}
+
+.navbar-signin {
+  padding: 5px;
+}
+
+.navbar-cart {
+  padding: 5px;
+}
