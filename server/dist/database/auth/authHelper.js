@@ -8,14 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = void 0;
-const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-    }
-    catch (error) {
-        console.log(`Error registering a user: ${error.message}`);
-        res.status(500).json({ error: "Error registering user" });
-    }
+exports.validateEmail = exports.validateUsername = void 0;
+const userModel_1 = __importDefault(require("../models/userModel"));
+const validateUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = userModel_1.default.findOne({ username });
+    return user === null ? false : true;
 });
-exports.register = register;
+exports.validateUsername = validateUsername;
+const validateEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = userModel_1.default.findOne({ email });
+    return user === null ? false : true;
+});
+exports.validateEmail = validateEmail;
