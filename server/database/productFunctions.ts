@@ -2,8 +2,7 @@ import Product, { IProduct } from "./models/productModel";
 import { Request, Response } from "express";
 
 // This set will hold each valid "category" of item. When a new product is added, if the given category is not in the set, dont add it and send an error
-const categorySet = new Set<string>();
-const categoryArr = [
+const categorySet = new Set<string>([
   "Fruits",
   "Candy",
   "Dairy",
@@ -12,11 +11,7 @@ const categoryArr = [
   "Snacks",
   "Beverages",
   "Pantry",
-];
-
-for (let i = 0; i < categoryArr.length; i++) {
-  categorySet.add(categoryArr[i]);
-}
+]);
 
 /**
  *

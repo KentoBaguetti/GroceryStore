@@ -15,8 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.addProduct = exports.getProductsByCategory = exports.getProductById = void 0;
 const productModel_1 = __importDefault(require("./models/productModel"));
 // This set will hold each valid "category" of item. When a new product is added, if the given category is not in the set, dont add it and send an error
-const categorySet = new Set();
-const categoryArr = [
+const categorySet = new Set([
     "Fruits",
     "Candy",
     "Dairy",
@@ -25,10 +24,7 @@ const categoryArr = [
     "Snacks",
     "Beverages",
     "Pantry",
-];
-for (let i = 0; i < categoryArr.length; i++) {
-    categorySet.add(categoryArr[i]);
-}
+]);
 /**
  *
  * @returns the number of products in the Product collection
