@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
 import logo from "../assets/companyLogo.jpg";
 
-// Navbar Component KUSHAGRA BHARTI
+// Navbar Component KUSHAGRA BHARTI Kentaro Barnes is KB
 
 const Navbar = () => {
   return (
