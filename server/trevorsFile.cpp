@@ -3,6 +3,7 @@
 using namespace std;
 
 int main() {
-    cout << "Hello, This is Trevor Drummond's work!" << endl;
-    return 0;
+
+std::cout<<"I did something"<<'\n';
+
 }
