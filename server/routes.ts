@@ -6,6 +6,7 @@ import {
   addProduct,
 } from "./database/productFunctions";
 import connectToDB from "./database/database";
+import { register } from "./database/auth/auth";
 
 const router = express.Router();
 
@@ -17,10 +18,14 @@ router.get("/", (req, res) => {
   });
 });
 
+// API endpoints for Products
 router.get("/product/:id", getProductById);
 
 router.get("/product/category/:category", getProductsByCategory);
 
 router.post("/product/add", addProduct);
+
+// API endpoints for auth
+router.post("/register", register);
 
 export default router;
