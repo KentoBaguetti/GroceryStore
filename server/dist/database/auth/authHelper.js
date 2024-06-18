@@ -12,15 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateEmail = exports.validateUsername = void 0;
+exports.emailExists = exports.usernameExists = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
-const validateUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = userModel_1.default.findOne({ username });
-    return user === null ? false : true;
+const usernameExists = (username) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel_1.default.findOne({ username });
+    return user !== null;
 });
-exports.validateUsername = validateUsername;
-const validateEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = userModel_1.default.findOne({ email });
-    return user === null ? false : true;
+exports.usernameExists = usernameExists;
+const emailExists = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel_1.default.findOne({ email });
+    return user !== null;
 });
-exports.validateEmail = validateEmail;
+exports.emailExists = emailExists;

@@ -1,13 +1,13 @@
 import User from "../models/userModel";
 
-const validateUsername = async (username: string): Promise<boolean> => {
-  const user = User.findOne({ username });
-  return user === null ? false : true;
+const usernameExists = async (username: string): Promise<boolean> => {
+  const user = await User.findOne({ username });
+  return user !== null;
 };
 
-const validateEmail = async (email: string): Promise<boolean> => {
-  const user = User.findOne({ email });
-  return user === null ? false : true;
+const emailExists = async (email: string): Promise<boolean> => {
+  const user = await User.findOne({ email });
+  return user !== null;
 };
 
-export { validateUsername, validateEmail };
+export { usernameExists, emailExists };

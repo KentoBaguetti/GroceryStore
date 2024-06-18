@@ -24,12 +24,12 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             .json({ error: "More user information is required for registration" });
     }
     try {
-        const validUsername = yield (0, authHelper_1.validateUsername)(username);
-        const validEmail = yield (0, authHelper_1.validateEmail)(email);
-        if (!validUsername) {
+        const existingUsername = yield (0, authHelper_1.usernameExists)(username);
+        const existingEmail = yield (0, authHelper_1.emailExists)(email);
+        if (existingUsername) {
             return res.status(400).json({ error: "Username is already taken!" });
         }
-        if (!validEmail) {
+        if (existingEmail) {
             return res.status(400).json({ error: "Email is already taken!" });
         }
         const salt = yield bcrypt_1.default.genSalt(10);
@@ -45,6 +45,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
         yield newUser.save();
         return res.status(200).json({ message: "User successfully created!" });
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     }
     catch (error) {
         console.log(`Error registering a user: ${error.message}`);
@@ -52,3 +53,17 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.register = register;
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { username, password } = req.body;
+    try {
+        return res.status(200);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({ error });
+        }
+        return res.status(500).json({
+            error: "An unexpected error has occured while trying to log in",
+        });
+    }
+});

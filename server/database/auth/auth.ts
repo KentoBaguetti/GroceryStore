@@ -2,8 +2,8 @@ import User from "../models/userModel";
 import mongoose from "mongoose";
 import bcrypt, { hash } from "bcrypt";
 import jwt from "jsonwebtoken";
-import express, { Request, Response } from "express";
-import { validateUsername, validateEmail } from "./authHelper";
+import express, { type Request, type Response } from "express";
+import { usernameExists, emailExists } from "./authHelper";
 
 const register = async (req: Request, res: Response): Promise<Response> => {
   const {
@@ -23,14 +23,14 @@ const register = async (req: Request, res: Response): Promise<Response> => {
   }
 
   try {
-    const validUsername: boolean = await validateUsername(username);
-    const validEmail: boolean = await validateEmail(email);
+    const existingUsername: boolean = await usernameExists(username);
+    const existingEmail: boolean = await emailExists(email);
 
-    if (!validUsername) {
+    if (existingUsername) {
       return res.status(400).json({ error: "Username is already taken!" });
     }
 
-    if (!validEmail) {
+    if (existingEmail) {
       return res.status(400).json({ error: "Email is already taken!" });
     }
 
@@ -50,9 +50,26 @@ const register = async (req: Request, res: Response): Promise<Response> => {
     await newUser.save();
 
     return res.status(200).json({ message: "User successfully created!" });
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   } catch (error: any) {
     console.log(`Error registering a user: ${error.message}`);
     return res.status(500).json({ error: "Error registering user" });
+  }
+};
+
+const login = async (req: Request, res: Response): Promise<Response> => {
+  const { username, password }: { username: string; password: string } =
+    req.body;
+
+  try {
+    return res.status(200);
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({ error });
+    }
+    return res.status(500).json({
+      error: "An unexpected error has occured while trying to log in",
+    });
   }
 };
 
