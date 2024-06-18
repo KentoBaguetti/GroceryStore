@@ -25,38 +25,26 @@ const categorySet = new Set([
     "Beverages",
     "Pantry",
 ]);
-/**
- *
- * @returns the number of products in the Product collection
- */
 const numberOfProducts = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield productModel_1.default.countDocuments({});
 });
-/**
- *
- * @param req - Holds a 'name' field used to query through the products for the right one
- * @param res - sends the found product as a response
- */
 const getProductById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = parseInt(req.params.id);
     try {
         const product = yield productModel_1.default.findOne({ id });
         if (!product) {
-            res.status(404).json({ error: "Product not found" });
-            return;
+            return res.status(404).json({ error: "Product not found" });
         }
-        res.status(200).json(product);
+        return res.status(200).json(product);
     }
     catch (err) {
         if (isNaN(id)) {
             console.error("Given ID is not a number");
-            res.status(400).json({ error: "400 Bad request" });
-            return;
+            return res.status(400).json({ error: "400 Bad request" });
         }
         else {
             console.error("Error retrieving product:", err);
-            res.status(500).json({ error: "Server error" });
-            return;
+            return res.status(500).json({ error: "Server error" });
         }
     }
 });
@@ -65,26 +53,27 @@ const getProductsByCategory = (req, res) => __awaiter(void 0, void 0, void 0, fu
     const category = req.params.category;
     try {
         if (!category || !categorySet.has(category)) {
-            res.status(400).json({ error: "Enter a valid category" });
-            return;
+            return res.status(400).json({ error: "Enter a valid category" });
         }
         const products = yield productModel_1.default.find({ category });
         if (!products) {
-            res.status(404).json({
+            return res.status(404).json({
                 error: `Could not find any products in the category "${category}"`,
             });
         }
-        res
+        return res
             .status(200)
             .json({ products, message: "Successfully fetched products" });
     }
     catch (error) {
         console.log(`Error fetching products by category: ${error.message}`);
+        return res
+            .status(500)
+            .json({ error: "Error fetching products by category" });
     }
 });
 exports.getProductsByCategory = getProductsByCategory;
 /**
- *
  * req.body template: {
  *  "name" : "Calipico",
  *  "category": "Beverages"
@@ -92,9 +81,6 @@ exports.getProductsByCategory = getProductsByCategory;
  *  "description" : "Japanese Soda",
  *  "ingredients": ["Water", "Japanese power"]
  * }
- *
- * @param req - body contains data that will be added to the database
- * @param res
  */
 const addProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, category, price, description, ingredients, } = req.body;
