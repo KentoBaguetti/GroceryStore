@@ -1,5 +1,5 @@
-import Product, { IProduct } from "./models/productModel";
-import { Request, Response } from "express";
+import Product, { type IProduct } from "./models/productModel";
+import type { Request, Response } from "express";
 
 // This set will hold each valid "category" of item. When a new product is added, if the given category is not in the set, dont add it and send an error
 const categorySet = new Set<string>([
@@ -21,7 +21,7 @@ const getProductById = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const id: number = parseInt(req.params.id);
+  const id: number = Number.parseInt(req.params.id);
 
   try {
     const product: IProduct | null = await Product.findOne({ id });
@@ -32,13 +32,12 @@ const getProductById = async (
 
     return res.status(200).json(product);
   } catch (err) {
-    if (isNaN(id)) {
+    if (Number.isNaN(id)) {
       console.error("Given ID is not a number");
       return res.status(400).json({ error: "400 Bad request" });
-    } else {
-      console.error("Error retrieving product:", err);
-      return res.status(500).json({ error: "Server error" });
     }
+    console.error("Error retrieving product:", err);
+    return res.status(500).json({ error: "Server error" });
   }
 };
 
@@ -63,11 +62,14 @@ const getProductsByCategory = async (
     return res
       .status(200)
       .json({ products, message: "Successfully fetched products" });
-  } catch (error: any) {
-    console.log(`Error fetching products by category: ${error.message}`);
-    return res
-      .status(500)
-      .json({ error: "Error fetching products by category" });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(`Error fetching products by category: ${error.message}`);
+      return res
+        .status(500)
+        .json({ error: "Error fetching products by category" });
+    }
+    return res.status(500).json({ error: "An unexpected error has occured" });
   }
 };
 
@@ -80,7 +82,7 @@ const getProductsByCategory = async (
  *  "ingredients": ["Water", "Japanese power"]
  * }
  */
-const addProduct = async (req: Request, res: Response): Promise<void> => {
+const addProduct = async (req: Request, res: Response): Promise<Response> => {
   const {
     name,
     category,
@@ -105,22 +107,19 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
       !ingredients ||
       !Array.isArray(ingredients)
     ) {
-      res
+      return res
         .status(400)
         .json({ error: "Missing or invalid fields in the request body" });
-      return;
     }
 
     if (typeof price !== "number" || price < 0) {
-      res.status(400).json({ error: "Price must be a postive number" });
-      return;
+      return res.status(400).json({ error: "Price must be a postive number" });
     }
 
     if (!categorySet.has(category)) {
-      res
+      return res
         .status(400)
         .json({ error: "Please give a valid category for the product" });
-      return;
     }
 
     const id = (await numberOfProducts()) + 1;
@@ -136,17 +135,16 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
 
     await newProduct.save();
 
-    res
+    return res
       .status(201)
       .json({ message: `Product added successfully: Product id ${id}` });
-  } catch (error: any) {
-    console.log(`Error adding new product: ${error}`);
-
-    if (error.name === "ValidationError") {
-      res.status(400).json({ error: error.mesesage });
-    } else {
-      res.status(500).send("Failed to add product");
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error adding product to database");
+      return res.status(500).json({ error });
     }
+    console.error("An unexpected error has occured");
+    return res.status(500).json({ error: "An unexpected error has occured" });
   }
 };
 

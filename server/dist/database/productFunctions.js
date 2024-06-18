@@ -29,7 +29,7 @@ const numberOfProducts = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield productModel_1.default.countDocuments({});
 });
 const getProductById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = parseInt(req.params.id);
+    const id = Number.parseInt(req.params.id);
     try {
         const product = yield productModel_1.default.findOne({ id });
         if (!product) {
@@ -38,14 +38,12 @@ const getProductById = (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.status(200).json(product);
     }
     catch (err) {
-        if (isNaN(id)) {
+        if (Number.isNaN(id)) {
             console.error("Given ID is not a number");
             return res.status(400).json({ error: "400 Bad request" });
         }
-        else {
-            console.error("Error retrieving product:", err);
-            return res.status(500).json({ error: "Server error" });
-        }
+        console.error("Error retrieving product:", err);
+        return res.status(500).json({ error: "Server error" });
     }
 });
 exports.getProductById = getProductById;
@@ -66,10 +64,13 @@ const getProductsByCategory = (req, res) => __awaiter(void 0, void 0, void 0, fu
             .json({ products, message: "Successfully fetched products" });
     }
     catch (error) {
-        console.log(`Error fetching products by category: ${error.message}`);
-        return res
-            .status(500)
-            .json({ error: "Error fetching products by category" });
+        if (error instanceof Error) {
+            console.log(`Error fetching products by category: ${error.message}`);
+            return res
+                .status(500)
+                .json({ error: "Error fetching products by category" });
+        }
+        return res.status(500).json({ error: "An unexpected error has occured" });
     }
 });
 exports.getProductsByCategory = getProductsByCategory;
@@ -92,20 +93,17 @@ const addProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             !description ||
             !ingredients ||
             !Array.isArray(ingredients)) {
-            res
+            return res
                 .status(400)
                 .json({ error: "Missing or invalid fields in the request body" });
-            return;
         }
         if (typeof price !== "number" || price < 0) {
-            res.status(400).json({ error: "Price must be a postive number" });
-            return;
+            return res.status(400).json({ error: "Price must be a postive number" });
         }
         if (!categorySet.has(category)) {
-            res
+            return res
                 .status(400)
                 .json({ error: "Please give a valid category for the product" });
-            return;
         }
         const id = (yield numberOfProducts()) + 1;
         const newProduct = new productModel_1.default({
@@ -117,18 +115,17 @@ const addProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             ingredients,
         });
         yield newProduct.save();
-        res
+        return res
             .status(201)
             .json({ message: `Product added successfully: Product id ${id}` });
     }
     catch (error) {
-        console.log(`Error adding new product: ${error}`);
-        if (error.name === "ValidationError") {
-            res.status(400).json({ error: error.mesesage });
+        if (error instanceof Error) {
+            console.error("Error adding product to database");
+            return res.status(500).json({ error });
         }
-        else {
-            res.status(500).send("Failed to add product");
-        }
+        console.error("An unexpected error has occured");
+        return res.status(500).json({ error: "An unexpected error has occured" });
     }
 });
 exports.addProduct = addProduct;
