@@ -13,3 +13,10 @@ Other Dependencies -
 - JSONwebtoken
 - bcrypt
 - body-parser
+
+## Scripts
+cd into the server directory
+```bash
+npm start
+```
+^ starts nodemon
