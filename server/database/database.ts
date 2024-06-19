@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import express from "express";
 import dotenv from "dotenv";
 import { register, login } from "./auth/auth";
 import authMiddleware from "./auth/authMiddleware";
-import { validateRegistration } from "./auth/validationMiddleware"; // Assuming you have this validation file
+import { validateRegistration } from "./auth/validationMiddleware";
+import express from "express";
 
 dotenv.config();
 
