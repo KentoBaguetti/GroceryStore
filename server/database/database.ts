@@ -7,7 +7,8 @@ import { validateRegistration } from "./auth/validationMiddleware"; // Assuming 
 
 dotenv.config();
 
-const uri = process.env.MONGO_URI || "mongodb://localhost:27017/GroceryStoreDatabase";
+const uri =
+  process.env.MONGO_URI || "mongodb://localhost:27017/GroceryStoreDatabase";
 
 async function connectToDB(): Promise<void> {
   try {
@@ -25,23 +26,23 @@ async function connectToDB(): Promise<void> {
   }
 }
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+// const app = express();
+// const PORT = process.env.PORT || 5000;
 
-app.use(express.json());
+// app.use(express.json());
 
-connectToDB();
+// connectToDB();
 
-app.post("/register", validateRegistration, register);
-app.post("/login", login);
+// app.post("/register", validateRegistration, register);
+// app.post("/login", login);
 
-// Example of a protected route
-app.get("/protected", authMiddleware, (req, res) => {
-  res.send("This is a protected route.");
-});
+// // Example of a protected route
+// app.get("/protected", authMiddleware, (req, res) => {
+//   res.send("This is a protected route.");
+// });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
 
 export default connectToDB;

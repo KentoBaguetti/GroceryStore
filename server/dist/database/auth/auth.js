@@ -68,8 +68,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!user) {
             return res.status(400).json({ error: "Invalid username or password" });
         }
-        const hashedPassword = yield bcrypt_1.default.hash(password, user.salt);
-        const isPasswordMatch = yield bcrypt_1.default.compare(hashedPassword, user.password);
+        const isPasswordMatch = yield bcrypt_1.default.compare(password, user.password);
         if (!isPasswordMatch) {
             return res.status(400).json({ error: "Invalid username or password" });
         }
@@ -77,7 +76,9 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             expiresIn: "1h",
         });
         yield (0, authHelper_1.updateLoginTime)(username);
-        return res.status(200).json({ token, message: "Login successful" });
+        return res
+            .status(200)
+            .json({ token: `Bearer ${token}`, message: "Login successful" });
     }
     catch (error) {
         if (error instanceof Error) {

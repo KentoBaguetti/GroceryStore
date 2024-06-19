@@ -76,9 +76,7 @@ const login = async (req: Request, res: Response): Promise<Response> => {
       return res.status(400).json({ error: "Invalid username or password" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, user.salt);
-
-    const isPasswordMatch = await bcrypt.compare(hashedPassword, user.password);
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
 
     if (!isPasswordMatch) {
       return res.status(400).json({ error: "Invalid username or password" });
@@ -93,7 +91,9 @@ const login = async (req: Request, res: Response): Promise<Response> => {
     );
 
     await updateLoginTime(username);
-    return res.status(200).json({ token, message: "Login successful" });
+    return res
+      .status(200)
+      .json({ token: `Bearer ${token}`, message: "Login successful" });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({ error: error.message });

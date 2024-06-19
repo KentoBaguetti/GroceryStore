@@ -13,11 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
-const auth_1 = require("./auth/auth");
-const authMiddleware_1 = __importDefault(require("./auth/authMiddleware"));
-const validationMiddleware_1 = require("./auth/validationMiddleware"); // Assuming you have this validation file
 dotenv_1.default.config();
 const uri = process.env.MONGO_URI || "mongodb://localhost:27017/GroceryStoreDatabase";
 function connectToDB() {
@@ -39,17 +35,17 @@ function connectToDB() {
         }
     });
 }
-const app = (0, express_1.default)();
-const PORT = process.env.PORT || 5000;
-app.use(express_1.default.json());
-connectToDB();
-app.post("/register", validationMiddleware_1.validateRegistration, auth_1.register);
-app.post("/login", auth_1.login);
-// Example of a protected route
-app.get("/protected", authMiddleware_1.default, (req, res) => {
-    res.send("This is a protected route.");
-});
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// const app = express();
+// const PORT = process.env.PORT || 5000;
+// app.use(express.json());
+// connectToDB();
+// app.post("/register", validateRegistration, register);
+// app.post("/login", login);
+// // Example of a protected route
+// app.get("/protected", authMiddleware, (req, res) => {
+//   res.send("This is a protected route.");
+// });
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
 exports.default = connectToDB;
