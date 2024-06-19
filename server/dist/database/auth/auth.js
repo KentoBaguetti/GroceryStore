@@ -12,10 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = void 0;
+exports.login = exports.register = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const authHelper_1 = require("./authHelper");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, email, password, } = req.body;
     if (!username || !email || !password) {
@@ -55,15 +58,34 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.register = register;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
+    if (!username || !password) {
+        return res
+            .status(400)
+            .json({ error: "Username and password are required" });
+    }
     try {
-        return res.status(200);
+        const user = yield userModel_1.default.findOne({ username });
+        if (!user) {
+            return res.status(400).json({ error: "Invalid username or password" });
+        }
+        const hashedPassword = yield bcrypt_1.default.hash(password, user.salt);
+        const isPasswordMatch = yield bcrypt_1.default.compare(hashedPassword, user.password);
+        if (!isPasswordMatch) {
+            return res.status(400).json({ error: "Invalid username or password" });
+        }
+        const token = jsonwebtoken_1.default.sign({ userId: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, {
+            expiresIn: "1h",
+        });
+        yield (0, authHelper_1.updateLoginTime)(username);
+        return res.status(200).json({ token, message: "Login successful" });
     }
     catch (error) {
         if (error instanceof Error) {
-            return res.status(500).json({ error });
+            return res.status(500).json({ error: error.message });
         }
-        return res.status(500).json({
-            error: "An unexpected error has occured while trying to log in",
-        });
+        return res
+            .status(500)
+            .json({ error: "An unexpected error occurred while trying to log in" });
     }
 });
+exports.login = login;

@@ -6,7 +6,8 @@ import {
   addProduct,
 } from "./database/productFunctions";
 import connectToDB from "./database/database";
-import { register } from "./database/auth/auth";
+import { register, login } from "./database/auth/auth";
+import { validateRegistration } from "./database/auth/validationMiddleware";
 
 const router = express.Router();
 
@@ -26,6 +27,6 @@ router.get("/product/category/:category", getProductsByCategory);
 router.post("/product/add", addProduct);
 
 // API endpoints for auth
-router.post("/register", register);
+router.post("/register", validateRegistration, register);
 
 export default router;

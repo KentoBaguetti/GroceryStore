@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 import bcrypt, { hash } from "bcrypt";
 import jwt from "jsonwebtoken";
 import express, { type Request, type Response } from "express";
-import { usernameExists, emailExists } from "./authHelper";
+import { usernameExists, emailExists, updateLoginTime } from "./authHelper";
+import dotenv from "dotenv";
+dotenv.config();
 
 const register = async (req: Request, res: Response): Promise<Response> => {
   const {
@@ -58,10 +60,13 @@ const register = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const login = async (req: Request, res: Response): Promise<Response> => {
-  const { username, password }: { username: string; password: string } = req.body;
+  const { username, password }: { username: string; password: string } =
+    req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ error: "Username and password are required" });
+    return res
+      .status(400)
+      .json({ error: "Username and password are required" });
   }
 
   try {
@@ -71,22 +76,31 @@ const login = async (req: Request, res: Response): Promise<Response> => {
       return res.status(400).json({ error: "Invalid username or password" });
     }
 
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    const hashedPassword = await bcrypt.hash(password, user.salt);
+
+    const isPasswordMatch = await bcrypt.compare(hashedPassword, user.password);
 
     if (!isPasswordMatch) {
       return res.status(400).json({ error: "Invalid username or password" });
     }
 
-    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET as string, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: user._id, username: user.username, role: user.role },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: "1h",
+      }
+    );
 
+    await updateLoginTime(username);
     return res.status(200).json({ token, message: "Login successful" });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({ error: error.message });
     }
-    return res.status(500).json({ error: "An unexpected error occurred while trying to log in" });
+    return res
+      .status(500)
+      .json({ error: "An unexpected error occurred while trying to log in" });
   }
 };
 

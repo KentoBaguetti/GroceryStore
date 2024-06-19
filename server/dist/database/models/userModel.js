@@ -23,21 +23,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
+const UserSchema = new mongoose_1.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     salt: { type: String, required: true },
-    role: { type: String, enum: ["normal", "admin"], default: "normal" },
-    dateAndTimeCreated: { type: Date },
-    dateAndTimeLastLoggedIn: { type: Date },
+    role: { type: String, default: "normal" },
+    dateAndTimeCreated: { type: Date, default: Date.now },
+    dateAndTimeLastLoggedIn: { type: Date, default: null },
+    tokens: [{ type: String }],
 });
-userSchema.methods.getUsername = function () {
+// Add instance methods to the schema
+UserSchema.methods.getUsername = function () {
     return this.username;
 };
-userSchema.methods.getEmail = function () {
+UserSchema.methods.getEmail = function () {
     return this.email;
 };
-const User = mongoose_1.default.model("User", userSchema);
-exports.default = User;
+// Export the model with the schema
+exports.User = mongoose_1.default.model("User", UserSchema);
+exports.default = exports.User;

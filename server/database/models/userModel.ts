@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, type Document, type Model } from "mongoose";
 
 export interface IUser extends Document {
   username: string;
@@ -19,7 +19,7 @@ const UserSchema: Schema = new Schema({
   role: { type: String, default: "normal" },
   dateAndTimeCreated: { type: Date, default: Date.now },
   dateAndTimeLastLoggedIn: { type: Date, default: null },
-  tokens: [{ type: String }]
+  tokens: [{ type: String }],
 });
 
 // Add instance methods to the schema

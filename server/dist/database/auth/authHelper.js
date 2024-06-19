@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.emailExists = exports.usernameExists = void 0;
+exports.updateLoginTime = exports.emailExists = exports.usernameExists = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
 const usernameExists = (username) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield userModel_1.default.findOne({ username });
@@ -24,3 +24,7 @@ const emailExists = (email) => __awaiter(void 0, void 0, void 0, function* () {
     return user !== null;
 });
 exports.emailExists = emailExists;
+const updateLoginTime = (username) => __awaiter(void 0, void 0, void 0, function* () {
+    yield userModel_1.default.findOneAndUpdate({ username }, { dateAndTimeLastLoggedIn: new Date() });
+});
+exports.updateLoginTime = updateLoginTime;

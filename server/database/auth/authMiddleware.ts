@@ -1,11 +1,16 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 interface CustomRequest extends Request {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   user?: any;
 }
 
-const authMiddleware = (req: CustomRequest, res: Response, next: NextFunction) => {
+const authMiddleware = (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
 
   if (!token) {
