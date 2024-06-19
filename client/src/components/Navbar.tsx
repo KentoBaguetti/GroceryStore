@@ -14,13 +14,6 @@ const Navbar = () => {
         </div>
       </Link>
 
-      <Link to="/location">
-        <div className="navbar-location">
-          <span>Delivery Location:</span>
-          <input type="text" placeholder="Enter your location" />
-        </div>
-      </Link>
-
       <form className="navbar-search-bar" action="">
         <input type="text" placeholder="Search..." />
         <button type="submit">Search</button>
@@ -28,7 +21,7 @@ const Navbar = () => {
 
       <div className="navbar-account">
         <div className="account-dropdown">
-          <button className="account-btn">My Account</button>
+          <h2 className="account-btn">My Account</h2>
           <div className="dropdown-content">
             <Link to="/profile">
               <a href="/profile">Profile</a>
