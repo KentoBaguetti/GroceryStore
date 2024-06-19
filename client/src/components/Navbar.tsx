@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
 import logo from "../assets/companyLogo.jpg";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 // Navbar Component KUSHAGRA BHARTI Kentaro Barnes is KB
 
@@ -38,12 +39,10 @@ const Navbar = () => {
       </div>
 
       <Link to="/signin">
-        <h2 className="navbar-signin">Sign in</h2>
+        <ShoppingCartIcon />
       </Link>
       <Link to="/cart">
-        <h2 className="navbar-cart">
-          <img className="navbar-img" src={logo} alt="Company Logo" />
-        </h2>
+        <ShoppingCartIcon />
       </Link>
     </div>
   );
