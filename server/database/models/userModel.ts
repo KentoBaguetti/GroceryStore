@@ -1,35 +1,37 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-interface IUser extends Document {
-  username: String;
-  email: String;
-  password: String;
-  salt: String;
-  role: String;
+export interface IUser extends Document {
+  username: string;
+  email: string;
+  password: string;
+  salt: string;
+  role: string;
   dateAndTimeCreated: Date;
-  dateAndTimeLastLoggedIn: Date;
-  getUsername(): String;
-  getEmail(): String;
+  dateAndTimeLastLoggedIn: Date | null;
+  tokens: string[];
 }
 
-const userSchema: Schema = new Schema({
+const UserSchema: Schema = new Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   salt: { type: String, required: true },
-  role: { type: String, enum: ["normal", "admin"], default: "normal" },
-  dateAndTimeCreated: { type: Date },
-  dateAndTimeLastLoggedIn: { type: Date },
+  role: { type: String, default: "normal" },
+  dateAndTimeCreated: { type: Date, default: Date.now },
+  dateAndTimeLastLoggedIn: { type: Date, default: null },
+  tokens: [{ type: String }]
 });
 
-userSchema.methods.getUsername = function (): String {
+// Add instance methods to the schema
+UserSchema.methods.getUsername = function (): string {
   return this.username;
 };
 
-userSchema.methods.getEmail = function (): String {
+UserSchema.methods.getEmail = function (): string {
   return this.email;
 };
 
-const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
+// Export the model with the schema
+export const User: Model<IUser> = mongoose.model<IUser>("User", UserSchema);
 
 export default User;

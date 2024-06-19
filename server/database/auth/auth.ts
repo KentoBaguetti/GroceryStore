@@ -58,19 +58,36 @@ const register = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const login = async (req: Request, res: Response): Promise<Response> => {
-  const { username, password }: { username: string; password: string } =
-    req.body;
+  const { username, password }: { username: string; password: string } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: "Username and password are required" });
+  }
 
   try {
-    return res.status(200);
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(400).json({ error: "Invalid username or password" });
+    }
+
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordMatch) {
+      return res.status(400).json({ error: "Invalid username or password" });
+    }
+
+    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET as string, {
+      expiresIn: "1h",
+    });
+
+    return res.status(200).json({ token, message: "Login successful" });
   } catch (error) {
     if (error instanceof Error) {
-      return res.status(500).json({ error });
+      return res.status(500).json({ error: error.message });
     }
-    return res.status(500).json({
-      error: "An unexpected error has occured while trying to log in",
-    });
+    return res.status(500).json({ error: "An unexpected error occurred while trying to log in" });
   }
 };
 
-export { register };
+export { register, login };
