@@ -1,32 +1,84 @@
 .navbar {
   display: flex;
-  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #333;
+  color: white;
 }
 
-.navbar-logo {
-  padding: 5px;
-}
-
-.navbar-img {
-  max-width: 30px;
-}
-
-.navbar-location {
-  padding: 5px;
+.navbar-logo img {
+  max-width: 50px;
 }
 
 .navbar-search-bar {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-search-bar input {
   padding: 5px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 3px;
+}
+
+.navbar-search-bar button {
+  padding: 5px 10px;
+  border: none;
+  background-color: #555;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.navbar-search-bar button:hover {
+  background-color: #444;
 }
 
 .navbar-account {
-  padding: 5px;
+  position: relative;
 }
 
-.navbar-signin {
-  padding: 5px;
+.account-dropdown {
+  position: relative;
+  display: inline-block;
 }
 
-.navbar-cart {
-  padding: 5px;
+.account-btn {
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #444;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.account-dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #555;
+}
+
+.navbar-icon {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.navbar-icon:hover {
+  color: #ddd;
 }

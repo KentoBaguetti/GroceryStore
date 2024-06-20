@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Product, { IProduct } from "../database/models/productModel";
+import Product, { IProduct } from "../database/product/productModel";
 import createAdditionalConnection from "../database/additionalConnection";
 
 const products: any = [

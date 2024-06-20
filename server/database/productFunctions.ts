@@ -1,4 +1,4 @@
-import Product, { type IProduct } from "./models/productModel";
+import Product, { type IProduct } from "./product/productModel";
 import type { Request, Response } from "express";
 
 // This set will hold each valid "category" of item. When a new product is added, if the given category is not in the set, dont add it and send an error

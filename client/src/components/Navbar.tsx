@@ -24,25 +24,21 @@ const Navbar = () => {
         <div className="account-dropdown">
           <h2 className="account-btn">My Account</h2>
           <div className="dropdown-content">
-            <Link to="/profile">
-              <a href="/profile">Profile</a>
-            </Link>
-
-            <Link to="/orders">
-              <a href="/orders">Orders</a>
-            </Link>
-            <Link to="/logout">
-              <a href="/logout">Logout</a>
-            </Link>
+            <Link to="/profile">Profile</Link>
+            <Link to="/orders">Orders</Link>
+            <Link to="/logout">Logout</Link>
           </div>
         </div>
       </div>
 
-      <Link to="/signin">
+      <Link to="/signin" className="navbar-icon">
         <ShoppingCartIcon />
       </Link>
-      <Link to="/cart">
+      <Link to="/cart" className="navbar-icon">
         <ShoppingCartIcon />
+      </Link>
+      <Link to="/admin" className="navbar-icon">
+        Admin
       </Link>
     </div>
   );

@@ -19,9 +19,9 @@ interface IProduct extends Document {
 const productSchema: Schema<IProduct> = new Schema({
   id: { type: Number, required: true, unique: true },
   name: { type: String, required: true },
-  category: { type: String },
+  category: { type: String, required: true },
   price: { type: Number, required: true },
-  description: { type: String, required: false },
+  description: { type: String, required: true },
   ingredients: { type: [String], required: true },
 });
 
@@ -41,7 +41,7 @@ productSchema.methods.getPrice = function (): String {
   return this.price;
 };
 
-productSchema.methods.getDescription = function (): String {
+productSchema.methods.getDescription = function (): string | undefined {
   return this.description;
 };
 
@@ -53,10 +53,8 @@ productSchema.methods.setPrice = function (newPrice: Number): void {
   this.price = newPrice;
 };
 
-const Product: Model<IProduct> = mongoose.model<IProduct>(
-  "Product",
-  productSchema
-);
+const Product: Model<IProduct> = mongoose.model<IProduct>("Product", productSchema);
+
 
 export default Product;
 export { IProduct };

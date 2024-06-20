@@ -1,7 +1,10 @@
-const Home = () => {
+import React from "react";
+
+const Home: React.FC = () => {
   return (
-    <div className="home">
-      <h1>Home</h1>
+    <div>
+      <h1>Welcome to Kentaro's Grocery Store</h1>
+      <p>Admin login added for GODMODE MF</p>
     </div>
   );
 };
