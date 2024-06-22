@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { register, login } from "./auth/auth";
-import authMiddleware from "./auth/authMiddleware";
 import { validateRegistration } from "./auth/validationMiddleware";
 import express from "express";
 
@@ -25,24 +23,5 @@ async function connectToDB(): Promise<void> {
     }
   }
 }
-
-// const app = express();
-// const PORT = process.env.PORT || 5000;
-
-// app.use(express.json());
-
-// connectToDB();
-
-// app.post("/register", validateRegistration, register);
-// app.post("/login", login);
-
-// // Example of a protected route
-// app.get("/protected", authMiddleware, (req, res) => {
-//   res.send("This is a protected route.");
-// });
-
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
 
 export default connectToDB;

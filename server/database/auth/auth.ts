@@ -104,4 +104,31 @@ const login = async (req: Request, res: Response): Promise<Response> => {
   }
 };
 
-export { register, login };
+const updateUserRole = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { username, newRole }: { username: string; newRole: string } = req.body;
+
+  if (!username || !newRole) {
+    return res
+      .status(422)
+      .json({ error: "Please enter a valid username and role" });
+  }
+
+  try {
+    await User.findOneAndUpdate({ username }, { role: newRole });
+
+    return res.status(200).json({ message: "Successfully updated user role" });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return res.status(400).json({ error: `Error message: ${error.message}` });
+    }
+
+    return res
+      .status(400)
+      .json({ error: "Updating user ran into an unexpected error" });
+  }
+};
+
+export { register, login, updateUserRole };

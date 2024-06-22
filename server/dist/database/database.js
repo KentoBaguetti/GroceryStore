@@ -35,17 +35,4 @@ function connectToDB() {
         }
     });
 }
-// const app = express();
-// const PORT = process.env.PORT || 5000;
-// app.use(express.json());
-// connectToDB();
-// app.post("/register", validateRegistration, register);
-// app.post("/login", login);
-// // Example of a protected route
-// app.get("/protected", authMiddleware, (req, res) => {
-//   res.send("This is a protected route.");
-// });
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
 exports.default = connectToDB;

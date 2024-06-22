@@ -31,7 +31,11 @@ const UserSchema = new mongoose_1.Schema({
     password: { type: String, required: true },
     salt: { type: String, required: true },
     role: { type: String, default: "normal" },
-    dateAndTimeCreated: { type: Date, default: Date.now },
+    dateAndTimeCreated: {
+        type: Date,
+        enum: ["normal", "admin"],
+        default: Date.now,
+    },
     dateAndTimeLastLoggedIn: { type: Date, default: null },
     tokens: [{ type: String }],
 });

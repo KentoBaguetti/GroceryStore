@@ -10,11 +10,12 @@ const authMiddleware = (
   req: CustomRequest,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
 
   if (!token) {
-    return res.status(401).json({ error: "Access denied. No token provided." });
+    res.status(401).json({ error: "Access denied. No token provided." });
+    return;
   }
 
   try {
@@ -22,8 +23,23 @@ const authMiddleware = (
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(400).json({ error: "Invalid token" });
+    res.status(400).json({ error: "Invalid token" });
+    return;
   }
 };
 
-export default authMiddleware;
+const adminMiddleware = (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+): void => {
+  authMiddleware(req, res, () => {
+    if (req.user.role !== "admin") {
+      res.status(403).json({ error: "Access denied, invalid role" });
+      return;
+    }
+    next();
+  });
+};
+
+export { authMiddleware, adminMiddleware };

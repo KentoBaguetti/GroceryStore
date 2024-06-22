@@ -1,9 +1,12 @@
 import express, { Express, type Request, type Response } from "express";
 import axios from "axios";
 import connectToDB from "./database/database";
-import { register, login } from "./database/auth/auth";
+import { register, login, updateUserRole } from "./database/auth/auth";
 import { validateRegistration } from "./database/auth/validationMiddleware";
-import authMiddleware from "./database/auth/authMiddleware";
+import {
+  authMiddleware,
+  adminMiddleware,
+} from "./database/auth/authMiddleware";
 
 const router = express.Router();
 
@@ -21,6 +24,8 @@ router.get("/", (req, res) => {
 router.post("/register", validateRegistration, register);
 
 router.post("/login", login);
+
+router.post("/updateRole", adminMiddleware, updateUserRole);
 
 router.get("/protected", authMiddleware, (req: Request, res: Response) => {
   console.log("This is a protected route");
