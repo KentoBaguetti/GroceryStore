@@ -91,9 +91,19 @@ const login = async (req: Request, res: Response): Promise<Response> => {
     );
 
     await updateLoginTime(username);
-    return res
-      .status(200)
-      .json({ token: `Bearer ${token}`, message: "Login successful" });
+
+    res.cookie(
+      "userCookie",
+      { token: `Bearer ${token}` },
+      {
+        maxAge: 3600000,
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+      }
+    );
+
+    return res.status(200).json({ message: "Login successful" });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({ error: error.message });

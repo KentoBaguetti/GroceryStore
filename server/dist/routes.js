@@ -15,8 +15,6 @@ router.get("/", (req, res) => {
         message: "'/' Active",
     });
 });
-// API endpoints for Products
-// API endpoints for auth
 router.post("/register", validationMiddleware_1.validateRegistration, auth_1.register);
 router.post("/login", auth_1.login);
 router.post("/updateRole", authMiddleware_1.adminMiddleware, auth_1.updateUserRole);

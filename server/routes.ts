@@ -18,9 +18,6 @@ router.get("/", (req, res) => {
   });
 });
 
-// API endpoints for Products
-
-// API endpoints for auth
 router.post("/register", validateRegistration, register);
 
 router.post("/login", login);

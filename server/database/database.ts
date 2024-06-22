@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { validateRegistration } from "./auth/validationMiddleware";
-import express from "express";
 
 dotenv.config();
 

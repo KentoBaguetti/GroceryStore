@@ -76,9 +76,13 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             expiresIn: "1h",
         });
         yield (0, authHelper_1.updateLoginTime)(username);
-        return res
-            .status(200)
-            .json({ token: `Bearer ${token}`, message: "Login successful" });
+        res.cookie("userCookie", { token: `Bearer ${token}` }, {
+            maxAge: 3600000,
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+        });
+        return res.status(200).json({ message: "Login successful" });
     }
     catch (error) {
         if (error instanceof Error) {
