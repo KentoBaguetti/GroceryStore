@@ -199,4 +199,18 @@ const updateUserData = async (
   }
 };
 
-export { register, login, updateUserRole, updateUserData };
+const logout = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    res.clearCookie("userCookie");
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({ error: `Expected error: ${error.message}` });
+    }
+    return res.status(500).json({ error: "Ran into an unexpected error" });
+  }
+};
+
+export { register, login, updateUserRole, updateUserData, logout };

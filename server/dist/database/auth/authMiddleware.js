@@ -8,7 +8,21 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const authMiddleware = (req, res, next) => {
-    const authHeader = req.cookies.userCookie.token;
+    // const authHeader: string = req.cookies.userCookie.token;
+    let authHeader = "";
+    try {
+        authHeader = req.cookies.userCookie.token;
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            res.status(403).json({
+                error: `Unauthorized access. No token provided: ${error.message}`,
+            });
+            return;
+        }
+        res.status(403).json({ error: "Unauthorized access. No token provided" });
+        return;
+    }
     if (!authHeader) {
         res.status(403).json({ error: "Access denied. Token not provided" });
         return;

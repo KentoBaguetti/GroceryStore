@@ -15,7 +15,22 @@ const authMiddleware = (
   res: Response,
   next: NextFunction
 ): void => {
-  const authHeader: string = req.cookies.userCookie.token;
+  // const authHeader: string = req.cookies.userCookie.token;
+
+  let authHeader = "";
+
+  try {
+    authHeader = req.cookies.userCookie.token;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(403).json({
+        error: `Unauthorized access. No token provided: ${error.message}`,
+      });
+      return;
+    }
+    res.status(403).json({ error: "Unauthorized access. No token provided" });
+    return;
+  }
 
   if (!authHeader) {
     res.status(403).json({ error: "Access denied. Token not provided" });

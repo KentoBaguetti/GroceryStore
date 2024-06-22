@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserData = exports.updateUserRole = exports.login = exports.register = void 0;
+exports.logout = exports.updateUserData = exports.updateUserRole = exports.login = exports.register = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -159,3 +159,18 @@ const updateUserData = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.updateUserData = updateUserData;
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res.clearCookie("userCookie");
+        return res.status(200).json({ message: "Logged out successfully" });
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            return res
+                .status(500)
+                .json({ error: `Expected error: ${error.message}` });
+        }
+        return res.status(500).json({ error: "Ran into an unexpected error" });
+    }
+});
+exports.logout = logout;

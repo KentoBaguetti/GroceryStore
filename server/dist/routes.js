@@ -19,6 +19,7 @@ router.post("/register", validationMiddleware_1.validateRegistration, auth_1.reg
 router.post("/login", auth_1.login);
 router.post("/updateRole", authMiddleware_1.adminMiddleware, auth_1.updateUserRole);
 router.post("/updateUser", authMiddleware_1.authMiddleware, auth_1.updateUserData);
+router.get("/logout", auth_1.logout);
 router.get("/protected", authMiddleware_1.authMiddleware, (req, res) => {
     console.log("This is a protected route");
     return res.status(200).json({ message: "You've accessed a proteced route" });
