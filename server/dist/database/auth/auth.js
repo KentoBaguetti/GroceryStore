@@ -117,45 +117,51 @@ const updateUserRole = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.updateUserRole = updateUserRole;
 // Once this function is used by the user, the user should be logged out and need to log in again
 // creating a new jwt token and destroying the previous one
-const updateUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updateUserData = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { newUsername, newEmail, newPassword, } = req.body;
     const { username } = req.user;
     const updateFields = {};
     if (newUsername) {
         if (yield userModel_1.default.findOne({ username: newUsername })) {
-            return res
-                .status(300)
-                .json({ error: "Someone is already using this username" });
+            res.status(300).json({ error: "Someone is already using this username" });
+            return;
         }
         updateFields.username = newUsername;
     }
     if (newEmail) {
         if (yield userModel_1.default.findOne({ email: newEmail })) {
-            return res
+            res
                 .status(300)
                 .json({ error: "This email is already being used by someone else" });
+            return;
         }
         updateFields.email = newEmail;
     }
     if (newPassword) {
         const salt = yield bcrypt_1.default.genSalt(10);
         const hashedPassword = yield bcrypt_1.default.hash(newPassword, salt);
-        updateFields.pasword = hashedPassword;
+        updateFields.password = hashedPassword;
         updateFields.salt = salt;
     }
     try {
-        yield userModel_1.default.findOneAndUpdate({ username }, { $set: updateFields });
-        return res.status(200).json({ message: "User data updated successfully" });
+        yield userModel_1.default.findOneAndUpdate({ username }, { $set: updateFields }, { new: true });
+        res.clearCookie("userCookie");
+        res
+            .status(200)
+            .json({ message: "User data updated and logged out successfully" });
+        return;
     }
     catch (error) {
         if (error instanceof Error) {
-            return res
+            res
                 .status(500)
                 .json({ error: `Error updating user data: ${error.message}` });
+            return;
         }
-        return res
+        res
             .status(500)
             .json({ error: "Ran into an unexpected error while updating user data" });
+        return;
     }
 });
 exports.updateUserData = updateUserData;

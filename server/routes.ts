@@ -32,7 +32,7 @@ router.post("/updateRole", adminMiddleware, updateUserRole);
 
 router.post("/updateUser", authMiddleware, updateUserData);
 
-router.get("/logout", logout);
+router.post("/logout", logout);
 
 router.get("/protected", authMiddleware, (req: Request, res: Response) => {
   console.log("This is a protected route");

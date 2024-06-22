@@ -2,7 +2,11 @@ import User from "../models/userModel";
 import mongoose from "mongoose";
 import bcrypt, { hash } from "bcrypt";
 import jwt from "jsonwebtoken";
-import express, { type Request, type Response } from "express";
+import express, {
+  type NextFunction,
+  type Request,
+  type Response,
+} from "express";
 import { usernameExists, emailExists, updateLoginTime } from "./authHelper";
 import dotenv from "dotenv";
 dotenv.config();
@@ -146,8 +150,9 @@ const updateUserRole = async (
 // creating a new jwt token and destroying the previous one
 const updateUserData = async (
   req: CustomRequest,
-  res: Response
-): Promise<Response> => {
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   const {
     newUsername,
     newEmail,
@@ -163,39 +168,49 @@ const updateUserData = async (
   const updateFields: { [key: string]: string } = {};
   if (newUsername) {
     if (await User.findOne({ username: newUsername })) {
-      return res
-        .status(300)
-        .json({ error: "Someone is already using this username" });
+      res.status(300).json({ error: "Someone is already using this username" });
+      return;
     }
     updateFields.username = newUsername;
   }
   if (newEmail) {
     if (await User.findOne({ email: newEmail })) {
-      return res
+      res
         .status(300)
         .json({ error: "This email is already being used by someone else" });
+      return;
     }
     updateFields.email = newEmail;
   }
   if (newPassword) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
-    updateFields.pasword = hashedPassword;
+    updateFields.password = hashedPassword;
     updateFields.salt = salt;
   }
 
   try {
-    await User.findOneAndUpdate({ username }, { $set: updateFields });
-    return res.status(200).json({ message: "User data updated successfully" });
+    await User.findOneAndUpdate(
+      { username },
+      { $set: updateFields },
+      { new: true }
+    );
+    res.clearCookie("userCookie");
+    res
+      .status(200)
+      .json({ message: "User data updated and logged out successfully" });
+    return;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      return res
+      res
         .status(500)
         .json({ error: `Error updating user data: ${error.message}` });
+      return;
     }
-    return res
+    res
       .status(500)
       .json({ error: "Ran into an unexpected error while updating user data" });
+    return;
   }
 };
 
