@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserRole = exports.login = exports.register = void 0;
+exports.updateUserData = exports.updateUserRole = exports.login = exports.register = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -115,3 +115,47 @@ const updateUserRole = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.updateUserRole = updateUserRole;
+// Once this function is used by the user, the user should be logged out and need to log in again
+// creating a new jwt token and destroying the previous one
+const updateUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { newUsername, newEmail, newPassword, } = req.body;
+    const { username } = req.user;
+    const updateFields = {};
+    if (newUsername) {
+        if (yield userModel_1.default.findOne({ username: newUsername })) {
+            return res
+                .status(300)
+                .json({ error: "Someone is already using this username" });
+        }
+        updateFields.username = newUsername;
+    }
+    if (newEmail) {
+        if (yield userModel_1.default.findOne({ email: newEmail })) {
+            return res
+                .status(300)
+                .json({ error: "This email is already being used by someone else" });
+        }
+        updateFields.email = newEmail;
+    }
+    if (newPassword) {
+        const salt = yield bcrypt_1.default.genSalt(10);
+        const hashedPassword = yield bcrypt_1.default.hash(newPassword, salt);
+        updateFields.pasword = hashedPassword;
+        updateFields.salt = salt;
+    }
+    try {
+        yield userModel_1.default.findOneAndUpdate({ username }, { $set: updateFields });
+        return res.status(200).json({ message: "User data updated successfully" });
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            return res
+                .status(500)
+                .json({ error: `Error updating user data: ${error.message}` });
+        }
+        return res
+            .status(500)
+            .json({ error: "Ran into an unexpected error while updating user data" });
+    }
+});
+exports.updateUserData = updateUserData;

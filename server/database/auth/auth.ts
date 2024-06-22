@@ -6,6 +6,7 @@ import express, { type Request, type Response } from "express";
 import { usernameExists, emailExists, updateLoginTime } from "./authHelper";
 import dotenv from "dotenv";
 dotenv.config();
+import type { CustomRequest } from "./authMiddleware";
 
 const register = async (req: Request, res: Response): Promise<Response> => {
   const {
@@ -141,4 +142,61 @@ const updateUserRole = async (
   }
 };
 
-export { register, login, updateUserRole };
+// Once this function is used by the user, the user should be logged out and need to log in again
+// creating a new jwt token and destroying the previous one
+const updateUserData = async (
+  req: CustomRequest,
+  res: Response
+): Promise<Response> => {
+  const {
+    newUsername,
+    newEmail,
+    newPassword,
+  }: {
+    newUsername?: string;
+    newEmail?: string;
+    newPassword?: string;
+  } = req.body;
+
+  const { username } = req.user;
+
+  const updateFields: { [key: string]: string } = {};
+  if (newUsername) {
+    if (await User.findOne({ username: newUsername })) {
+      return res
+        .status(300)
+        .json({ error: "Someone is already using this username" });
+    }
+    updateFields.username = newUsername;
+  }
+  if (newEmail) {
+    if (await User.findOne({ email: newEmail })) {
+      return res
+        .status(300)
+        .json({ error: "This email is already being used by someone else" });
+    }
+    updateFields.email = newEmail;
+  }
+  if (newPassword) {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    updateFields.pasword = hashedPassword;
+    updateFields.salt = salt;
+  }
+
+  try {
+    await User.findOneAndUpdate({ username }, { $set: updateFields });
+    return res.status(200).json({ message: "User data updated successfully" });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({ error: `Error updating user data: ${error.message}` });
+    }
+    return res
+      .status(500)
+      .json({ error: "Ran into an unexpected error while updating user data" });
+  }
+};
+
+export { register, login, updateUserRole, updateUserData };

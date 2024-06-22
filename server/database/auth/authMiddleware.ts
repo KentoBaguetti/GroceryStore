@@ -6,6 +6,8 @@ dotenv.config();
 interface CustomRequest extends Request {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   user?: any;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  body: any;
 }
 
 const authMiddleware = (
@@ -24,6 +26,7 @@ const authMiddleware = (
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
     req.user = decoded;
+    console.log(decoded);
     next();
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -49,4 +52,4 @@ const adminMiddleware = (
   });
 };
 
-export { authMiddleware, adminMiddleware };
+export { authMiddleware, adminMiddleware, type CustomRequest };

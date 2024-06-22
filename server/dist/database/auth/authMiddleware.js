@@ -17,6 +17,7 @@ const authMiddleware = (req, res, next) => {
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
+        console.log(decoded);
         next();
     }
     catch (error) {
